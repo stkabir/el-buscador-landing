@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cardboard-delivery-box-59cc68",
+    "file": "box"
+  },
+  {
+    "id": "timber-eur-pallet-a1f655",
+    "file": "pallet"
+  },
+  {
+    "id": "cargo-forklift-91f591",
+    "file": "forklift"
+  },
+  {
+    "id": "steel-erector-124bef",
+    "file": "worker"
+  },
+  {
+    "id": "site-manager-d60b95",
+    "file": "manager"
+  },
+  {
+    "id": "x-ray-baggage-conveyor-b3d1cc",
+    "file": "xray"
+  },
+  {
+    "id": "desk-monitor-32cfce",
+    "file": "monitor"
+  },
+  {
+    "id": "computer-bench-run-lit-87d9cf",
+    "file": "bench"
+  },
+  {
+    "id": "hanging-aisle-sign-0b372d",
+    "file": "aisle-sign"
+  },
+  {
+    "id": "platform-weighing-scale-f43019",
+    "file": "scale"
+  },
+  {
+    "id": "waybill-clipboard-05bd4a",
+    "file": "clipboard"
+  },
+  {
+    "id": "shipping-label-printer-ba8a6a",
+    "file": "printer"
+  },
+  {
+    "id": "paper-shredder-5366a6",
+    "file": "shredder"
+  },
+  {
+    "id": "construction-dumpster-2de7ae",
+    "file": "dumpster"
+  },
+  {
+    "id": "roll-out-wheelie-bin-3b540e",
+    "file": "wheelie-bin"
+  }
+]

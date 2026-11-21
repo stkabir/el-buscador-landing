@@ -1,0 +1,77 @@
+[
+  {
+    "file": "box",
+    "title": "Cardboard Delivery Box",
+    "page": "https://polyfork.dev/asset/cardboard-delivery-box-59cc68"
+  },
+  {
+    "file": "pallet",
+    "title": "Timber EUR Pallet",
+    "page": "https://polyfork.dev/asset/timber-eur-pallet-a1f655"
+  },
+  {
+    "file": "forklift",
+    "title": "Cargo Forklift",
+    "page": "https://polyfork.dev/asset/cargo-forklift-91f591"
+  },
+  {
+    "file": "worker",
+    "title": "Steel Erector",
+    "page": "https://polyfork.dev/asset/steel-erector-124bef"
+  },
+  {
+    "file": "manager",
+    "title": "Site Manager",
+    "page": "https://polyfork.dev/asset/site-manager-d60b95"
+  },
+  {
+    "file": "xray",
+    "title": "X-Ray Baggage Conveyor",
+    "page": "https://polyfork.dev/asset/x-ray-baggage-conveyor-b3d1cc"
+  },
+  {
+    "file": "monitor",
+    "title": "Desk Monitor",
+    "page": "https://polyfork.dev/asset/desk-monitor-32cfce"
+  },
+  {
+    "file": "bench",
+    "title": "Computer Bench Run (Lit Monitors)",
+    "page": "https://polyfork.dev/asset/computer-bench-run-lit-87d9cf"
+  },
+  {
+    "file": "aisle-sign",
+    "title": "Hanging Aisle Sign",
+    "page": "https://polyfork.dev/asset/hanging-aisle-sign-0b372d"
+  },
+  {
+    "file": "scale",
+    "title": "Platform Weighing Scale",
+    "page": "https://polyfork.dev/asset/platform-weighing-scale-f43019"
+  },
+  {
+    "file": "clipboard",
+    "title": "Waybill Clipboard",
+    "page": "https://polyfork.dev/asset/waybill-clipboard-05bd4a"
+  },
+  {
+    "file": "printer",
+    "title": "Shipping Label Printer",
+    "page": "https://polyfork.dev/asset/shipping-label-printer-ba8a6a"
+  },
+  {
+    "file": "shredder",
+    "title": "Paper Shredder",
+    "page": "https://polyfork.dev/asset/paper-shredder-5366a6"
+  },
+  {
+    "file": "dumpster",
+    "title": "Construction Dumpster",
+    "page": "https://polyfork.dev/asset/construction-dumpster-2de7ae"
+  },
+  {
+    "file": "wheelie-bin",
+    "title": "Roll-Out Wheelie Bin",
+    "page": "https://polyfork.dev/asset/roll-out-wheelie-bin-3b540e"
+  }
+]

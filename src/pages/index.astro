@@ -1,16 +1,228 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import { sections, REPO, DOWNLOAD } from '../data/sections';
+import credits from '../data/model-credits.json';
+
+const toneClass = {
+  safe: 'text-safe border-safe/40',
+  review: 'text-review border-review/40',
+  keep: 'text-keep border-keep/40',
+} as const;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="El Buscador · Mira qué ocupa tu disco"
+  description="Analizador de disco para Windows, gratis y open source. Te muestra lo que más pesa y te explica qué puedes borrar con seguridad."
+>
+  <!-- Mundo 3D -->
+  <canvas id="world" class="fixed inset-0 h-dvh w-full touch-pan-y" aria-hidden="true"></canvas>
+  <div
+    id="veil"
+    class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_center,transparent_55%,var(--bg)_130%)]"
+    aria-hidden="true"
+  >
+    <div class="absolute inset-y-0 left-0 hidden w-[55%] bg-linear-to-r from-bg/85 via-bg/45 to-transparent sm:block"></div>
+    <div class="absolute inset-x-0 bottom-0 h-[55%] bg-linear-to-t from-bg/80 to-transparent sm:hidden"></div>
+  </div>
+
+  <!-- Cabecera -->
+  <header
+    class="fixed inset-x-0 top-0 z-30 flex items-center justify-between gap-4 px-4 pt-[max(env(safe-area-inset-top),1rem)] pb-3 sm:px-8"
+  >
+    <a href="#inicio" class="flex items-center gap-2.5 font-semibold tracking-tight" data-goto="0">
+      <svg viewBox="0 0 100 100" class="size-7 text-accent" aria-hidden="true">
+        <rect x="14" y="14" width="44" height="72" rx="7" fill="currentColor"></rect>
+        <rect x="64" y="14" width="22" height="42" rx="6" fill="currentColor" opacity=".7"></rect>
+        <rect x="64" y="62" width="22" height="24" rx="6" fill="currentColor" opacity=".4"></rect>
+      </svg>
+      <span>El Buscador</span>
+    </a>
+    <nav class="flex items-center gap-2">
+      <a
+        href={REPO}
+        class="hidden rounded-full px-3 py-2 text-sm text-muted transition hover:text-ink sm:inline-block"
+        target="_blank"
+        rel="noopener">GitHub</a
+      >
+      <button
+        id="theme-toggle"
+        type="button"
+        class="grid size-10 place-items-center rounded-full border border-line bg-card backdrop-blur transition hover:border-accent/50"
+        aria-label="Cambiar tema claro u oscuro"
+      >
+        <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <g class="hidden dark:block">
+            <circle cx="12" cy="12" r="4.2"></circle>
+            <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" stroke-linecap="round"></path>
+          </g>
+          <path class="dark:hidden" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+      <a
+        href={DOWNLOAD}
+        download
+        class="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:brightness-110"
+        >Descargar</a
+      >
+    </nav>
+  </header>
+
+  <!-- Copy pinneado, un paso por zona del mundo -->
+  <main id="overlay" class="pointer-events-none fixed inset-0 z-20">
+    {
+      sections.map((s, i) => (
+        <section
+          id={s.id}
+          data-step={i}
+          class:list={[
+            'step absolute inset-x-4 bottom-[max(env(safe-area-inset-bottom),1.25rem)] sm:inset-x-auto sm:left-8 md:left-14',
+            'sm:top-1/2 sm:bottom-auto sm:w-[min(30rem,42vw)] sm:-translate-y-1/2',
+            i === 0 && 'sm:w-[min(36rem,48vw)]',
+          ]}
+          aria-labelledby={`${s.id}-t`}
+        >
+          <div class="rounded-3xl border border-line bg-card p-5 shadow-2xl shadow-black/10 backdrop-blur-md sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none sm:backdrop-blur-none">
+            <p class="mb-3 text-xs font-semibold tracking-[0.18em] text-accent uppercase">{s.eyebrow}</p>
+            {i === 0 ? (
+              <h1 id={`${s.id}-t`} class="text-4xl leading-[1.02] font-bold tracking-tight text-balance sm:text-6xl lg:text-7xl">
+                {s.title}
+              </h1>
+            ) : (
+              <h2 id={`${s.id}-t`} class="text-3xl leading-[1.05] font-bold tracking-tight text-balance sm:text-5xl">
+                {s.title}
+              </h2>
+            )}
+            <p class="mt-4 max-w-md text-base leading-relaxed text-muted sm:text-lg">{s.body}</p>
+
+            {s.tags && (
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {s.tags.map((t) => (
+                  <li
+                    class:list={[
+                      'rounded-full border bg-card px-3 py-1 font-mono text-xs backdrop-blur',
+                      t.tone ? toneClass[t.tone] : 'border-line text-ink',
+                    ]}
+                  >
+                    {t.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {s.counter && (
+              <p class="mt-6 flex items-baseline gap-2">
+                <span class="text-5xl font-bold tracking-tight text-accent tabular-nums" data-counter={s.counter.value}>
+                  0,0
+                </span>
+                <span class="text-xl font-semibold">{s.counter.unit}</span>
+                <span class="text-sm text-muted">{s.counter.label}</span>
+              </p>
+            )}
+
+            {s.cta && (
+              <div class="pointer-events-auto mt-7 flex flex-wrap items-center gap-3">
+                <a
+                  href={DOWNLOAD}
+                  download
+                  class="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-on-accent shadow-lg shadow-emerald-500/20 transition hover:brightness-110"
+                >
+                  <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19.5h14" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  Descargar para Windows
+                </a>
+                <a
+                  href={REPO}
+                  target="_blank"
+                  rel="noopener"
+                  class="rounded-full border border-line bg-card px-5 py-3 font-medium backdrop-blur transition hover:border-accent/60"
+                >
+                  Ver el código
+                </a>
+                {i === 0 && <span class="w-full text-xs text-muted">En desarrollo · Windows 10 y 11 · Español e inglés</span>}
+              </div>
+            )}
+          </div>
+        </section>
+      ))
+    }
+  </main>
+
+  <!-- Riel de ruta -->
+  <nav
+    id="rail"
+    class="fixed top-1/2 right-4 z-30 hidden -translate-y-1/2 flex-col gap-3 md:flex lg:right-8"
+    aria-label="Secciones"
+  >
+    {
+      sections.map((s, i) => (
+        <a href={`#${s.id}`} data-goto={i} class="group flex items-center justify-end gap-3" aria-label={s.rail}>
+          <span class="text-xs text-muted opacity-0 transition group-hover:opacity-100 group-data-[on=true]:text-ink group-data-[on=true]:opacity-100">
+            {s.rail}
+          </span>
+          <span class="h-2 w-2 rounded-full bg-muted/40 transition-all group-hover:bg-muted group-data-[on=true]:h-6 group-data-[on=true]:bg-accent" />
+        </a>
+      ))
+    }
+  </nav>
+
+  <!-- Barra de progreso (móvil) -->
+  <div class="fixed inset-x-0 top-0 z-40 h-0.5 md:hidden" aria-hidden="true">
+    <div id="progress" class="h-full origin-left scale-x-0 bg-accent"></div>
+  </div>
+
+  <!-- Pista de scroll: su altura define la duración del vuelo -->
+  <div id="track" style={`height:${sections.length * 140}svh`} aria-hidden="true"></div>
+
+  <footer class="relative z-[25] border-t border-line bg-bg px-4 py-12 sm:px-8">
+    <div class="mx-auto flex max-w-5xl flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <svg viewBox="0 0 100 100" class="size-6 text-accent" aria-hidden="true">
+          <rect x="14" y="14" width="44" height="72" rx="7" fill="currentColor"></rect>
+          <rect x="64" y="14" width="22" height="42" rx="6" fill="currentColor" opacity=".7"></rect>
+          <rect x="64" y="62" width="22" height="24" rx="6" fill="currentColor" opacity=".4"></rect>
+        </svg>
+        <p class="text-sm text-muted">El Buscador · Hecho con Go y Wails · Licencia GPL-3.0</p>
+      </div>
+      <div class="flex gap-5 text-sm">
+        <a href={REPO} class="text-muted hover:text-ink" target="_blank" rel="noopener">Código</a>
+        <a href={`${REPO}/releases`} class="text-muted hover:text-ink" target="_blank" rel="noopener">Versiones</a>
+        <a href={`${REPO}/issues`} class="text-muted hover:text-ink" target="_blank" rel="noopener">Reportar un problema</a>
+      </div>
+    </div>
+    <p class="mx-auto mt-8 max-w-5xl text-xs leading-relaxed text-muted">
+      Modelos 3D:
+      {credits.map((c, i) => (
+        <>
+          <a href={c.page} class="underline-offset-2 hover:text-ink hover:underline" target="_blank" rel="noopener">{c.title}</a>{i < credits.length - 1 ? ', ' : ''}
+        </>
+      ))}
+      by <a href="https://polyfork.dev" class="hover:text-ink hover:underline" target="_blank" rel="noopener">Polyfork</a>, <a href="https://creativecommons.org/licenses/by/4.0/" class="hover:text-ink hover:underline" target="_blank" rel="noopener">CC BY 4.0</a>, optimizados para la web. Animaciones: Quaternius (CC0).
+    </p>
+  </footer>
+
+  <script>
+    import { boot } from '../scripts/world/main';
+    boot();
+  </script>
+</Layout>
+
+<style is:global>
+  .no-webgl #world,
+  .no-webgl #veil,
+  .no-webgl #track,
+  .no-webgl #rail {
+    display: none;
+  }
+  .no-webgl #overlay {
+    position: relative;
+    inset: auto;
+    display: grid;
+    gap: 6rem;
+    padding: 8rem 1rem 6rem;
+  }
+  .no-webgl #overlay .step {
+    inset: auto !important;
+    transform: none !important;
+  }
+</style>
